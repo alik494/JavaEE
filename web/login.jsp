@@ -8,9 +8,7 @@
 <head>
     <title>Log in</title>
 </head>
-<style>
-    <%@include file='styles/regStyle.css' %>
-</style>
+
 <body>
 <div class = "container">
 <form method="post" action=/login>

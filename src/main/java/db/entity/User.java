@@ -3,6 +3,23 @@ package db.entity;
 import java.util.Set;
 
 public class User {
+    /**
+     * The corresponding name of table in database.
+     */
+    public static final String TABLE_NAME = "usr";
+    /**
+     * The corresponding name of id column in table.
+     */
+    public static final String ID_COLUMN = "id";
+    /**
+     * The corresponding name of name column in table.
+     */
+    public static final String NAME_COLUMN = "username";
+    /**
+     * The corresponding name of password column in table.
+     */
+    public static final String PASSWORD_COLUMN = "password";
+
     private Long id;
     private String username;
     private String password;
@@ -12,6 +29,12 @@ public class User {
 
 
     public User() {
+    }
+
+    public User(Long id, String username, String password) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
     }
 
     public User(String username, String password, boolean active, Set<Role> roles) {

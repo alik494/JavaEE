@@ -5,7 +5,7 @@
          version="4.0">
     <servlet>
         <servlet-name>FirstServlet</servlet-name>
-        <servlet-class>FirstServlet</servlet-class>
+        <servlet-class>servlets.FirstServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>FirstServlet</servlet-name>
@@ -18,8 +18,9 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>FirstServletJsp</servlet-name>
-        <url-pattern>/*</url-pattern>
+        <url-pattern>/</url-pattern>
     </servlet-mapping>
+
 
 
 </web-app>
