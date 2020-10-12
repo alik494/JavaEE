@@ -1,4 +1,4 @@
-import logic.Cart;
+
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,21 +10,17 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
 
-@WebServlet("/library")
+
 public class FirstServlet extends HttpServlet {
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PrintWriter printWriter=response.getWriter();
         printWriter.println("start");
-//        try {
-//            Class.forName("org.postgresql.Driver");
-//        } catch (ClassNotFoundException e) {
-//            e.printStackTrace();
-//        }
+
 
         try {
             Connection conn= DriverManager.getConnection(
@@ -50,9 +46,8 @@ public class FirstServlet extends HttpServlet {
 //        pw.println("<h3> Hello "+name+" "+surname+"</h3> ");
 //        pw.println("</html>");
 //
-        // RequestDispatcher requestDispatcher=request.getRequestDispatcher("/firstJSP.jsp");
         //requestDispatcher.forward(request,response);
         //response.sendRedirect("https://google.com");
-        //response.sendRedirect("/firstJSP.jsp");
+        response.sendRedirect("/hello-world-jsp");
     }
 }

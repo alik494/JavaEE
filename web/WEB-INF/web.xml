@@ -14,18 +14,12 @@
 
     <servlet>
         <servlet-name>FirstServletJsp</servlet-name>
-        <jsp-file>/firstJSP.jsp</jsp-file>
+        <jsp-file>/index.jsp</jsp-file>
     </servlet>
     <servlet-mapping>
         <servlet-name>FirstServletJsp</servlet-name>
-        <url-pattern>/hello-world-jsp</url-pattern>
-    </servlet-mapping> <servlet>
-
-    <servlet-name>showCart</servlet-name>
-    <jsp-file>/showCart.jsp</jsp-file>
-</servlet>
-    <servlet-mapping>
-        <servlet-name>showCart</servlet-name>
-        <url-pattern>/showCart</url-pattern>
+        <url-pattern>/*</url-pattern>
     </servlet-mapping>
+
+
 </web-app>
