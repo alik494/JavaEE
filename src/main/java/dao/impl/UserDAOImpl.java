@@ -14,19 +14,15 @@ public class UserDAOImpl {
 
     private PoolConnectionBuilder connectionBuilder;
 
-    private Connection getConnection() throws SQLException {
-        return connectionBuilder.getConnection();
-    }
 
     public Long getNextUserID() {
         Long nextVal = null;
         try (Connection connection =
 
+                     ConnectionPool.getConnection()) {
 //                     connectionBuilder.getConnection()) {
-
-//                     ConnectionPool.getConnection()) {
-                     //todo impl connection pool
-                     ConnectionUtils.getConnection()) {
+//                     ConnectionUtils.getConnection()) {
+            //todo impl connection pool
             PreparedStatement statement = connection.prepareStatement(UserQueries.FIND_NEXT_USER_ID);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
