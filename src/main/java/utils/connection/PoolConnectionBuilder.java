@@ -1,4 +1,4 @@
-package utils;
+package utils.connection;
 
 import org.apache.log4j.Logger;
 
@@ -24,7 +24,13 @@ public class PoolConnectionBuilder {
         this.dataSource = dataSource;
     }
 
-    public Connection getConnection() throws SQLException {
-        return dataSource.getConnection();
+    public Connection getConnection() {
+        Connection connection = null;
+        try {
+            connection = dataSource.getConnection();
+        } catch (SQLException throwables) {
+            log.error(throwables);
+        }
+        return connection;
     }
 }

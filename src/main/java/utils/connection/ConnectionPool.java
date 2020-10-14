@@ -1,4 +1,4 @@
-package utils;
+package utils.connection;
 
 
 import org.apache.commons.dbcp2.BasicDataSource;
@@ -20,6 +20,7 @@ public class ConnectionPool {
 
     static {
         ds.setUrl(URL);
+        ds.setDriverClassName("org.postgresql.Driver");
         ds.setUsername(USER);
         ds.setPassword(PASSWORD);
         ds.setMinIdle(5);

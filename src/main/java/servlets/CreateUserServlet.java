@@ -34,12 +34,10 @@ public class CreateUserServlet extends HttpServlet {
      */
     DAOFactory factory;
 
-
     public CreateUserServlet() {
         this.factory = new DAOFactory();
 
     }
-
 
     /**
      * Method performing HHTP GET request

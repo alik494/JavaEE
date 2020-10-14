@@ -2,14 +2,16 @@ package dao.impl;
 
 import db.entity.User;
 import org.apache.log4j.Logger;
-import utils.ConnectionPool;
-import utils.PoolConnectionBuilder;
+import utils.connection.ConnectionPool;
+import utils.connection.ConnectionUtils;
+import utils.connection.PoolConnectionBuilder;
 import utils.queries.UserQueries;
 
 import java.sql.*;
 
 public class UserDAOImpl {
     private static final Logger log = Logger.getLogger(UserDAOImpl.class);
+
     private PoolConnectionBuilder connectionBuilder;
 
     private Connection getConnection() throws SQLException {
@@ -19,21 +21,19 @@ public class UserDAOImpl {
     public Long getNextUserID() {
         Long nextVal = null;
         try (Connection connection =
-//                     DriverManager.getConnection(
-//                             "jdbc:postgresql://localhost:5432/postgres",
-//                             "postgres",
-//                             "49410alik")) {
 
 //                     connectionBuilder.getConnection()) {
 
-                     ConnectionPool.getConnection()) {
+//                     ConnectionPool.getConnection()) {
+                     //todo impl connection pool
+                     ConnectionUtils.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(UserQueries.FIND_NEXT_USER_ID);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 nextVal = resultSet.getLong("nextval");
             }
         } catch (SQLException throwables) {
-            log.error("Error", throwables);
+            log.error("Error" + throwables, throwables);
         }
         return nextVal;
     }
@@ -41,11 +41,7 @@ public class UserDAOImpl {
     public User findByEmail(String email) {
         User user = null;
         try (Connection connection =
-                     DriverManager.getConnection(
-                             "jdbc:postgresql://localhost:5432/postgres",
-                             "postgres",
-                             "49410alik")) {
-//                    ConnectionPool.getConnection()) {
+                     ConnectionUtils.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(UserQueries.FIND_BY_EMAIL);
             statement.setString(1, email);
             ResultSet resultSet = statement.executeQuery();
@@ -62,17 +58,11 @@ public class UserDAOImpl {
             log.error("Error", throwables);
         }
         return user;
-
     }
-
 
     public void insert(User user) {
         try (Connection connection =
-                     DriverManager.getConnection(
-                             "jdbc:postgresql://localhost:5432/postgres",
-                             "postgres",
-                             "49410alik")) {
-//                    ConnectionPool.getConnection()) {
+                     ConnectionUtils.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(UserQueries.INSERT_USER, Statement.RETURN_GENERATED_KEYS);
             statement.setLong(1, user.getId());
             statement.setString(2, user.getEmail());
@@ -80,7 +70,6 @@ public class UserDAOImpl {
             statement.setString(4, user.getPassword());
             statement.setBoolean(5, user.isActive());
             statement.execute();
-
         } catch (SQLException throwables) {
             log.error("Error", throwables);
         }
