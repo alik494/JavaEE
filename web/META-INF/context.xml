@@ -1,0 +1,20 @@
+
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+    <Resource
+              driverClassName="org.postgresql.Driver"
+              name="jdbc/postgres"
+              auth="Container"
+              type="javax.sql.DataSource"
+              maxActive="100" maxIdle="30" maxWait="10000"
+              username="postgres"
+              password="49410alik"
+
+              connectionProperties="useUnicode=yes;characterEncoding=utf8;"
+              defaultAutoCommit="false"
+              defaultTransactionIsolation="READ_COMMITTED"
+              url="jdbc:postgresql://localhost/postgres"
+              validationQuery="select 1"
+       />
+
+</Context>

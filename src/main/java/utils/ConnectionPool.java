@@ -1,26 +1,21 @@
 package utils;
 
-import org.apache.commons.dbcp2.BasicDataSource;
 
+import org.apache.commons.dbcp2.BasicDataSource;
+import org.apache.log4j.Logger;
 import java.sql.Connection;
 import java.sql.SQLException;
 
 public class ConnectionPool {
-    /**
-     * Postgres user's name
-     */
+
+    private static final Logger log = Logger.getLogger(ConnectionPool.class);
+
     public static final String USER = "postgres";
-    /**
-     * MySQl user's password
-     */
+
     public static final String PASSWORD = "49410alik";
-    /**
-     * Url for accessing the database
-     */
-    public static final String URL =  "jdbc:postgresql://localhost:5432/postgres";
-    /**
-     * BasicDataSource instance
-     */
+
+    public static final String URL =  "jdbc:postgresql://localhost/postgres?useSSL=false&serverTimezone=UTC";
+
     private static BasicDataSource ds = new BasicDataSource();
 
     static {
@@ -30,9 +25,18 @@ public class ConnectionPool {
         ds.setMinIdle(5);
         ds.setMaxIdle(10);
         ds.setMaxOpenPreparedStatements(100);
+        log.debug(ds);
     }
 
+    /**
+     * Method for getting connection
+     * @return connection to database
+     * @throws SQLException SQLException
+     */
     public static Connection getConnection() throws SQLException {
+        log.debug(ds);
         return ds.getConnection();
     }
+
+
 }

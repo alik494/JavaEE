@@ -1,12 +1,10 @@
 package servlets;
 
-
 import dao.impl.UserDAOImpl;
 import db.entity.Role;
 import db.entity.User;
 import org.apache.log4j.Logger;
 import utils.InputDataCheck;
-import utils.PasswordEncryptorSHA256;
 import utils.RegexContainer;
 import utils.factories.DAOFactory;
 
@@ -17,7 +15,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collections;
 
 
@@ -27,11 +24,8 @@ public class CreateUserServlet extends HttpServlet {
     /**
      * Instance of Logger
      */
-//    private static final Logger log = Logger.getLogger(CreateUserServlet.class);
-    /**
-     * Instance of User
-     */
-    User user = null;
+    private static final Logger log = Logger.getLogger(CreateUserServlet.class);
+
     /**
      * Instance of PatientDataManipulations
      */
@@ -57,7 +51,9 @@ public class CreateUserServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//        log.info("Entering a registration page");
+        req.setCharacterEncoding("UTF-8");
+        resp.setCharacterEncoding("UTF-8");
+        log.info("Entering a registration page");
         RequestDispatcher requestDispatcher = req.getRequestDispatcher("registration.jsp");
         requestDispatcher.forward(req, resp);
     }
@@ -72,37 +68,40 @@ public class CreateUserServlet extends HttpServlet {
      */
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+        resp.setCharacterEncoding("UTF-8");
         try {
             req.setCharacterEncoding("UTF-8");
+            final String email = req.getParameter("email");
             final String name = req.getParameter("name");
             final String password = req.getParameter("password");
-            boolean isValid = inputValidator(name, password);
+            final String password2 = req.getParameter("password2");
+            boolean isValid = inputValidator(email, name, password);
             if (!isValid) {
-                req.setAttribute("message", "You entered non-valid credentials. Please,try again.");
+                req.setAttribute("errorString", "You entered non-valid credentials. Please,try again.");
+                req.getServletContext().getRequestDispatcher("/registration.jsp").forward(req, resp);
+            }
+            if (!password.equals(password2)) {
+                req.setAttribute("errorString", "password are not equal");
                 req.getServletContext().getRequestDispatcher("/registration.jsp").forward(req, resp);
             } else {
                 UserDAOImpl userDAO = factory.createUserDao();
-
-                if (userDAO.findByNameAndPass(name, PasswordEncryptorSHA256.encryptPasswordWithSHA256(password)) == null) {
-                    User user;
-                    if (name.equals("admin")) {
-                        user = new User(name,  password, true,Collections.singleton(Role.ADMIN));
-                    }else {
-                        user = new User(name,  password, true,Collections.singleton(Role.USER));
-                    }
-//                    log.debug("New user: " + user.getUsername() + Arrays.asList(user.getRoles()));
+                if (userDAO.findByEmail(email) == null) {
+                    Long userID = userDAO.getNextUserID();
+                    User user = new User(userID, email, name, password, true, Collections.singleton(Role.USER));
                     userDAO.insert(user);
-                   //todo check manipulations
+                    log.debug("New user after insert: " + user.toString());
+                    //todo check manipulations and save data
                     resp.sendRedirect(req.getContextPath() + "/");
                 } else {
-//                    log.debug("User with such credentials already exists.");
-                    req.setAttribute("message", "User with such credentials already exists!");
-                     req.getServletContext().getRequestDispatcher("/registration.jsp").forward(req, resp);
+                    log.debug("User with such credentials already exists.");
+                    req.setAttribute("errorString", "User with such credentials already exists!");
+                    req.getServletContext().getRequestDispatcher("/registration.jsp").forward(req, resp);
 
                 }
             }
         } catch (Exception ex) {
-//            log.error("An error occured while creating a new user", ex);
+            log.error("An error occured while creating a new user ", ex);
             req.getServletContext().getRequestDispatcher("/error.jsp").forward(req, resp);
         }
     }
@@ -114,16 +113,21 @@ public class CreateUserServlet extends HttpServlet {
      * @param password password of the user to check
      * @return true if data is valid,else - false
      */
-    public static boolean inputValidator(String name, String password) {
+    public static boolean inputValidator(String email, String name, String password) {
         boolean isValid;
+        isValid = InputDataCheck.inputCheck(email, RegexContainer.REGEX_EMAIL);
+        if (!isValid) {
+            log.debug("Non-valid email entered");
+            return false;
+        }
         isValid = InputDataCheck.inputCheck(name, RegexContainer.REGEX_NAME_ENG);
         if (!isValid) {
-//            log.debug("Non-valid name entered");
+            log.debug("Non-valid name entered");
             return false;
         }
         isValid = InputDataCheck.inputCheck(password, RegexContainer.REGEX_PASSWORD);
         if (!isValid) {
-//            log.debug("Non-valid password entered");
+            log.debug("Non-valid password entered");
             return false;
         }
         return true;
